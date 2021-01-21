@@ -22,3 +22,13 @@ class AutoyoulaItem(scrapy.Item):
     specifications = scrapy.Field()
     price = scrapy.Field()
     test = scrapy.Field()
+
+
+class HHVacancyItem(scrapy.Item):
+    _id = scrapy.Field()
+    url = scrapy.Field()
+    title = scrapy.Field()
+    salary = scrapy.Field()
+    description = scrapy.Field()
+    skills = scrapy.Field()
+    company_url = scrapy.Field()
