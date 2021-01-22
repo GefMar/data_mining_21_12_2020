@@ -7,18 +7,32 @@
 # useful for handling different item types with a single interface
 import os
 import pymongo
-from itemadapter import ItemAdapter
+from scrapy import Request
+from scrapy.pipelines.images import ImagesPipeline
+
 
 
 class GbParsePipeline:
     def process_item(self, item, spider):
         return item
 
+
 class MongoSavePipeline:
     def __init__(self):
-        self.db_client = pymongo.MongoClient(os.getenv('DATA_BASE'))
+        self.db_client = pymongo.MongoClient(os.getenv("DATA_BASE"))
+
     def process_item(self, item, spider):
-        db = self.db_client['data_mining_21_12_2020']
+        db = self.db_client["data_mining_21_12_2020"]
         collection = db[spider.name]
         collection.insert_one(item)
+        return item
+
+
+class GbImagePipeline(ImagesPipeline):
+    def get_media_requests(self, item, info):
+        for img_url in item.get("images", []):
+            yield Request(img_url)
+
+    def item_completed(self, results, item, info):
+        item['images'] = [itm[1] for itm in results]
         return item
