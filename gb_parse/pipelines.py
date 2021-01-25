@@ -23,7 +23,7 @@ class MongoSavePipeline:
 
     def process_item(self, item, spider):
         db = self.db_client["data_mining_21_12_2020"]
-        collection = db[spider.name]
+        collection = db[type(item).__name__]
         collection.insert_one(item)
         return item
 
